@@ -48,7 +48,7 @@ class AirCargoProblem(Problem):
             list of Action objects
         """
 
-        # TODO create concrete Action objects based on the domain action schema for: Load, Unload, and Fly
+        # create concrete Action objects based on the domain action schema for: Load, Unload, and Fly
         # concrete actions definition: specific literal action that does not include variables as with the schema
         # for example, the action schema 'Load(c, p, a)' can represent the concrete actions 'Load(C1, P1, SFO)'
         # or 'Load(C2, P2, JFK)'.  The actions for the planning problem must be concrete because the problems in
@@ -66,12 +66,13 @@ class AirCargoProblem(Problem):
                         precond_pos = [expr("At({},{})".format(c, a)), expr("At({},{})".format(p, a))]
                         precond_neg = []
                         effect_add = [expr("In({},{})".format(c, p))]
-                        effect_neg = [expr("At([],{})".format(c, a))]
-                        load = Action(expr("Load([],[],[])".format(c, p, a)),
+                        effect_neg = [expr("At({},{})".format(c, a))]
+                        load = Action(expr("Load({},{},{})".format(c, p, a)),
                                       [precond_pos,precond_neg],
                                       [effect_add,effect_neg])
                         loads.append(load)
             return loads
+
 
         def unload_actions():
             """Create all concrete Unload actions and return a list
@@ -82,7 +83,7 @@ class AirCargoProblem(Problem):
             for c in self.cargos:
                 for p in self.planes:
                     for a in self.airports:
-                        precond_pos = [expr("In({},{})".format(c, p)), expr("At({},{})".format(p, a))]
+                        precond_pos = [expr("In({},{})".format(c, p)), expr("At({},{})".format(p, a)),]
                         precond_neg = []
                         effect_add = [expr("At({},{})".format(c, a))]
                         effect_neg = [expr("In({},{})".format(c, p))]
@@ -246,7 +247,7 @@ def air_cargo_p2() -> AirCargoProblem:
         expr("At(C3, ATL)"),
         expr("At(P1, SFO)"),
         expr("At(P2, JFK)"),
-        expr("At(P3, ATL)")
+        expr("At(P3, ATL)"),
         ]
     neg = [
         expr("At(C1, JFK)"),
@@ -269,13 +270,13 @@ def air_cargo_p2() -> AirCargoProblem:
         expr("At(P2, SFO)"),
         expr("At(P2, ATL)"),
         expr("At(P3, JFK)"),
-        expr("At(P3, SFO)")
+        expr("At(P3, SFO)"),
     ]
     init = FluentState(pos, neg)
     goal = [
         expr("At(C1, JFK)"),
         expr("At(C2, SFO)"),
-        expr("At(C3, SFO)")
+        expr("At(C3, SFO)"),
     ]
     return AirCargoProblem(cargos, planes, airports, init, goal)
 
@@ -290,7 +291,7 @@ def air_cargo_p3() -> AirCargoProblem:
         expr("At(C3, ATL)"),
         expr("At(C4, ORD)"),
         expr("At(P1, SFO)"),
-        expr("At(P2, JFK)")
+        expr("At(P2, JFK)"),
     ]
     neg = [
         expr("At(C1, JFK)"),

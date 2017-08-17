@@ -352,10 +352,10 @@ class PlanningGraph():
         prevLevel = self.a_levels[level-1]
 
         for a in prevLevel:
-            effNode = a.eff_nodes
+            effNode = a.effnodes
             for node in effNode:
                 #Connection
-                node.parent.add(a)
+                node.parents.add(a)
                 a.children.add(node)
                 self.s_levels[level].add(node)
 
@@ -522,11 +522,11 @@ class PlanningGraph():
         :param node_s2: PgNode_s
         :return: bool
         """
-        for preCond in node_s1.parents :
+        for preCond in node_s1.parents:
             for preCond2 in node_s2.parents:
                 if not preCond.is_mutex(preCond2):
                     return False
-        return False
+        return True
 
     def h_levelsum(self) -> int:
         """The sum of the level costs of the individual goals (admissible if goals independent)
